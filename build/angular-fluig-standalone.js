@@ -1,7 +1,7 @@
 /**
  * angular-fluig
  * A list of AngularJS services, directives, filters, utilities an resources for Fluig
- * @version v1.0.7
+ * @version v1.0.8
  * @link 
  * @license MIT
  */
