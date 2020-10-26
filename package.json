@@ -1,6 +1,6 @@
 {
   "name": "angular-fluig",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "A list of AngularJS services, directives, filters, utilities an resources for Fluig",
   "main": "index.js",
   "scripts": {
