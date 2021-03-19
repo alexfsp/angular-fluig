@@ -54,7 +54,7 @@ function DateMaskDirective($locale, $compile, $timeout, $parse) {
                 if (dt.getDate()) {
                     var date = new Date(dt.getDate());
                     if (!attrs.pickTime) {
-                        date.setHours(23, 59, 59);
+                        date.setHours(12, 0, 0);
                     }
 
                     ctrl.$setViewValue(date.getTime());
