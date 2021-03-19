@@ -1,7 +1,7 @@
 /**
  * angular-fluig
  * A list of AngularJS services, directives, filters, utilities an resources for Fluig
- * @version v1.0.8
+ * @version v1.0.10
  * @link 
  * @license MIT
  */
@@ -1041,7 +1041,7 @@ module.exports = {
 		},
 		validations: {
 			cep: function (value) {
-				return value.length === 8;
+				return value.toString().length === 8;
 			}
 		}
 	}),
@@ -1835,7 +1835,7 @@ function DateMaskDirective($locale, $compile, $timeout, $parse) {
                 if (dt.getDate()) {
                     var date = new Date(dt.getDate());
                     if (!attrs.pickTime) {
-                        date.setHours(23, 59, 59);
+                        date.setHours(12, 0, 0);
                     }
 
                     ctrl.$setViewValue(date.getTime());
@@ -2003,6 +2003,10 @@ function SwitchDirective($compile, $timeout) {
     return {
         restrict: 'A',
         require: '?ngModel',
+        scope: {
+            ngReadonly: "=",
+            ngDisabled: "="
+        },
         link: function (scope, element, attrs, ctrl) {
 
             if (!ctrl) {
@@ -2017,6 +2021,15 @@ function SwitchDirective($compile, $timeout) {
 
             template.hide();
 
+            scope.$watch('ngReadonly', function (val, oldval) {
+                FLUIGC.switcher.isReadOnly(element, val);
+            })
+            scope.$watch('ngDisabled', function (val, oldval) {
+                if (val) {
+                    FLUIGC.switcher.disable(element);
+                }
+            })
+
             $timeout(function () {
 
                 FLUIGC.switcher.init(element, {
@@ -2024,27 +2037,9 @@ function SwitchDirective($compile, $timeout) {
                 });
 
                 if (ctrl.$modelValue == true || ctrl.$modelValue == 'true') {
-                    
-                    var isReadOnly = false;
-                    var isDisabled = false;
-                    if ($(element).attr('readonly') == 'readonly') {
-                        isReadOnly = true;
-                        FLUIGC.switcher.isReadOnly(element, false);
-                    }
-                    if ($(element).attr('disabled') == 'disabled') {
-                        isDisabled = true;
-                        FLUIGC.switcher.enable(element);
-                    }
-                    $timeout(function() {
+                    $timeout(function () {
                         FLUIGC.switcher.setTrue(element);
-
-                        FLUIGC.switcher.isReadOnly(element, isReadOnly);
-
-                        if (isDisabled) {
-                            FLUIGC.switcher.disable(element);
-                        }
                     })
-
                 }
 
                 FLUIGC.switcher.onChange(element, function (event, state) {
@@ -2053,7 +2048,6 @@ function SwitchDirective($compile, $timeout) {
 
                 });
                 $timeout(function () {
-
                     template.fadeIn();
                 }, 10);
             }, 10);
