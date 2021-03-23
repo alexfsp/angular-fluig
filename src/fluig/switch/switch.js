@@ -16,6 +16,8 @@ function SwitchDirective($compile, $timeout) {
                 return;
             }
 
+            console.log('switcher');
+
             var template = $compile('<div style="width: 110px"></div>')(scope);
 
             element.after(template);
@@ -29,6 +31,8 @@ function SwitchDirective($compile, $timeout) {
             scope.$watch('ngDisabled', function (val, oldval) {
                 if (val) {
                     FLUIGC.switcher.disable(element);
+                } else {
+                    FLUIGC.switcher.enable(element);
                 }
             })
 
