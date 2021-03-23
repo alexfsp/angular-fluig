@@ -1,7 +1,7 @@
 /**
  * angular-fluig
  * A list of AngularJS services, directives, filters, utilities an resources for Fluig
- * @version v1.0.10
+ * @version v1.1.0
  * @link 
  * @license MIT
  */
@@ -2014,6 +2014,8 @@ function SwitchDirective($compile, $timeout) {
                 return;
             }
 
+            console.log('switcher');
+
             var template = $compile('<div style="width: 110px"></div>')(scope);
 
             element.after(template);
@@ -2027,6 +2029,8 @@ function SwitchDirective($compile, $timeout) {
             scope.$watch('ngDisabled', function (val, oldval) {
                 if (val) {
                     FLUIGC.switcher.disable(element);
+                } else {
+                    FLUIGC.switcher.enable(element);
                 }
             })
 
