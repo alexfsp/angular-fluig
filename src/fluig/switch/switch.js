@@ -16,8 +16,6 @@ function SwitchDirective($compile, $timeout) {
                 return;
             }
 
-            console.log('switcher');
-
             var template = $compile('<div style="width: 110px"></div>')(scope);
 
             element.after(template);
