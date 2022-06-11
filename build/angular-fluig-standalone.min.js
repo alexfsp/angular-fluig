@@ -1,7 +1,7 @@
 /**
  * angular-fluig
  * A list of AngularJS services, directives, filters, utilities an resources for Fluig
- * @version v1.1.0
+ * @version v1.1.1
  * @link 
  * @license MIT
  */
@@ -1460,6 +1460,7 @@ function AutocompleteDirective($locale, $window, $timeout, $compile) {
             minLength: "@",
             filterFields: "=",
             resultFields: "=",
+            searchField: "@",
             displayKey: "@",
             searchTimeout: "@",
             values: "=",
@@ -1490,15 +1491,13 @@ function AutocompleteDirective($locale, $window, $timeout, $compile) {
             });
 
             scope.$watch('filterFields', function (val, oldval) {
-
                 if ((oldval || val) && val != oldval) {
-
-                    //createAutocomplete();
+                    // createAutocomplete();
                 }
             });
 
             scope.$watch('resultFields', function (val, oldval) {
-
+                
                 if ((oldval || val) && val != oldval) {
                     //createAutocomplete();
                 }
@@ -1570,7 +1569,7 @@ function AutocompleteDirective($locale, $window, $timeout, $compile) {
                 }
 
                 if (scope.dataset) {
-                    var restUrl = "/api/public/ecm/dataset/search?datasetId=" + scope.dataset + "&searchField=" + scope.displayKey + "&filterFields=" + filterFields + "&resultFields=" + resultFields + "&limit=" + scope.fluigAutocompleteLimit + "&";
+                    var restUrl = "/api/public/ecm/dataset/search?datasetId=" + scope.dataset + "&searchField=" + (scope.searchField || scope.displayKey) + "&filterFields=" + filterFields + "&resultFields=" + resultFields + "&limit=" + scope.fluigAutocompleteLimit + "&";
 
                     var source = {
                         url: restUrl,
