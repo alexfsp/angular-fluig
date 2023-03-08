@@ -9,6 +9,8 @@ var maskFactory = require('mask-factory');
  */
 var phoneMask8D = new StringMask('(00) 0000-0000'),
 	phoneMask9D = new StringMask('(00) 00000-0000'),
+	phoneMask8DSemDDD = new StringMask('0000-0000'),
+	phoneMask9DSemDDD = new StringMask('00000-0000'),
 	phoneMask0800 = new StringMask('0000-000-0000');
 
 module.exports = {
@@ -27,7 +29,7 @@ module.exports = {
 		validations: {
 			phoneNumber: function (value) {
 				var valueLength = value && value.toString().length;
-				return valueLength === 10 || valueLength === 11;
+				return valueLength === 8 || valueLength === 9 || valueLength === 10 || valueLength === 11;
 			}
 		}
 	}),
@@ -35,12 +37,16 @@ module.exports = {
 }
 
 function format(value) {
-	
+
 	if (!value) return "";
 
 	var formatedValue;
 	if (value.indexOf('0800') === 0) {
 		formatedValue = phoneMask0800.apply(value);
+	} else if (value.length < 9) {
+		formatedValue = phoneMask8DSemDDD.apply(value) || '';
+	} else if (value.length < 10) {
+		formatedValue = phoneMask9DSemDDD.apply(value) || '';
 	} else if (value.length < 11) {
 		formatedValue = phoneMask8D.apply(value) || '';
 	} else {

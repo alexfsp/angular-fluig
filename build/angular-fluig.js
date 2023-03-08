@@ -1,5 +1,5 @@
 /**
- * angular-fluig
+ * ng-fluig
  * A list of AngularJS services, directives, filters, utilities an resources for Fluig
  * @version v1.0.3
  * @link 
@@ -470,6 +470,8 @@ var maskFactory = require('mask-factory');
  */
 var phoneMask8D = new StringMask('(00) 0000-0000'),
 	phoneMask9D = new StringMask('(00) 00000-0000'),
+	phoneMask8DSemDDD = new StringMask('0000-0000'),
+	phoneMask9DSemDDD = new StringMask('00000-0000'),
 	phoneMask0800 = new StringMask('0000-000-0000');
 
 module.exports = {
@@ -488,7 +490,7 @@ module.exports = {
 		validations: {
 			phoneNumber: function (value) {
 				var valueLength = value && value.toString().length;
-				return valueLength === 10 || valueLength === 11;
+				return valueLength === 8 || valueLength === 9 || valueLength === 10 || valueLength === 11;
 			}
 		}
 	}),
@@ -496,12 +498,16 @@ module.exports = {
 }
 
 function format(value) {
-	
+
 	if (!value) return "";
 
 	var formatedValue;
 	if (value.indexOf('0800') === 0) {
 		formatedValue = phoneMask0800.apply(value);
+	} else if (value.length < 9) {
+		formatedValue = phoneMask8DSemDDD.apply(value) || '';
+	} else if (value.length < 10) {
+		formatedValue = phoneMask9DSemDDD.apply(value) || '';
 	} else if (value.length < 11) {
 		formatedValue = phoneMask8D.apply(value) || '';
 	} else {
@@ -977,17 +983,24 @@ function HeaderDirective($locale) {
     return {
         restrict: 'A',
         require: '?ngModel',
-        link: function(scope, element, attrs, ctrl) {
+        link: function (scope, element, attrs, ctrl) {
 
             var title = attrs.fluigHeader || $(document).find("title").text();
             var logo = attrs.logo || '/portal/resources/images/logo.png';
+            var height = attrs.height || '80';
 
             var html = '<div class="page-header row">';
             var h = "h1";
 
-            if (title.length > 54) { h = "h4"; } else if (title.length > 43) { h = "h3"; } else if (title.length > 34) { h = "h2"; }
+            if (title.length > 54) {
+                h = "h4";
+            } else if (title.length > 43) {
+                h = "h3";
+            } else if (title.length > 34) {
+                h = "h2";
+            }
 
-            html += "<img src='" + logo + "' id='logo' class='logo' height='80' alt='Logo' title='Logo' border='0' />";
+            html += "<img src='" + logo + "' id='logo' class='logo' height='" + height + "' alt='Logo' title='Logo' border='0' />";
             html += '<' + h + ' class="title text-center">' + title + '</' + h + '>';
             html += '</div>';
 
@@ -1077,7 +1090,7 @@ function SwitchDirective($compile, $timeout) {
     return {
         restrict: 'A',
         require: '?ngModel',
-        link: function(scope, element, attrs, ctrl) {
+        link: function (scope, element, attrs, ctrl) {
 
             if (!ctrl) {
                 console.error('ngModel não informado para o elemento:', element[0]);
@@ -1091,16 +1104,22 @@ function SwitchDirective($compile, $timeout) {
 
             template.hide();
 
-            $timeout(function() {
+            $timeout(function () {
 
-                FLUIGC.switcher.init(element, { "state": ctrl.$modelValue });
+                FLUIGC.switcher.init(element, {
+                    "state": ctrl.$modelValue
+                });
+                
+                if (ctrl.$modelValue == true || ctrl.$modelValue == 'true') {
+                    FLUIGC.switcher.setTrue(element);
+                }
 
-                FLUIGC.switcher.onChange(element, function(event, state) {
+                FLUIGC.switcher.onChange(element, function (event, state) {
                     ctrl.$setViewValue(state);
                     ctrl.$render();
 
                 });
-                $timeout(function() {
+                $timeout(function () {
 
                     template.fadeIn();
                 }, 10);
@@ -1392,7 +1411,7 @@ function NumberMaskDirective($locale, $parse, PreFormatters, NumberMasks) {
 	return {
 		restrict: 'A',
 		require: 'ngModel',
-		link: function(scope, element, attrs, ctrl) {
+		link: function (scope, element, attrs, ctrl) {
 			var decimalDelimiter = $locale.NUMBER_FORMATS.DECIMAL_SEP,
 				thousandsDelimiter = $locale.NUMBER_FORMATS.GROUP_SEP,
 				decimals = $parse(attrs.fluigNumberMask)(scope);
@@ -1417,8 +1436,6 @@ function NumberMaskDirective($locale, $parse, PreFormatters, NumberMasks) {
 				var formatedValue = viewMask.apply(valueToFormat);
 				var actualNumber = parseFloat(modelMask.apply(valueToFormat));
 
-                console.log(valueToFormat, formatedValue, actualNumber)
-
 				if (angular.isDefined(attrs.fluigNegativeNumber)) {
 					var isNegative = (value[0] === '-'),
 						needsToInvertSign = (value.slice(-1) === '-');
@@ -1430,8 +1447,6 @@ function NumberMaskDirective($locale, $parse, PreFormatters, NumberMasks) {
 						formatedValue = '-' + ((actualNumber !== 0) ? formatedValue : '');
 					}
 				}
-
-                console.log(valueToFormat, formatedValue, actualNumber)
 
 				if (ctrl.$viewValue !== formatedValue) {
 					ctrl.$setViewValue(formatedValue);
@@ -1464,7 +1479,7 @@ function NumberMaskDirective($locale, $parse, PreFormatters, NumberMasks) {
 			ctrl.$parsers.push(parser);
 
 			if (attrs.fluigNumberMask) {
-				scope.$watch(attrs.fluigNumberMask, function(_decimals) {
+				scope.$watch(attrs.fluigNumberMask, function (_decimals) {
 					decimals = isNaN(_decimals) ? 2 : _decimals;
 					viewMask = NumberMasks.viewMask(decimals, decimalDelimiter, thousandsDelimiter);
 					modelMask = NumberMasks.modelMask(decimals);
@@ -1476,11 +1491,11 @@ function NumberMaskDirective($locale, $parse, PreFormatters, NumberMasks) {
 			if (attrs.min) {
 				var minVal;
 
-				ctrl.$validators.min = function(modelValue) {
+				ctrl.$validators.min = function (modelValue) {
 					return validators.minNumber(ctrl, modelValue, minVal);
 				};
 
-				scope.$watch(attrs.min, function(value) {
+				scope.$watch(attrs.min, function (value) {
 					minVal = value;
 					ctrl.$validate();
 				});
@@ -1489,11 +1504,11 @@ function NumberMaskDirective($locale, $parse, PreFormatters, NumberMasks) {
 			if (attrs.max) {
 				var maxVal;
 
-				ctrl.$validators.max = function(modelValue) {
+				ctrl.$validators.max = function (modelValue) {
 					return validators.maxNumber(ctrl, modelValue, maxVal);
 				};
 
-				scope.$watch(attrs.max, function(value) {
+				scope.$watch(attrs.max, function (value) {
 					maxVal = value;
 					ctrl.$validate();
 				});

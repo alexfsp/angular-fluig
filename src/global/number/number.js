@@ -6,7 +6,7 @@ function NumberMaskDirective($locale, $parse, PreFormatters, NumberMasks) {
 	return {
 		restrict: 'A',
 		require: 'ngModel',
-		link: function(scope, element, attrs, ctrl) {
+		link: function (scope, element, attrs, ctrl) {
 			var decimalDelimiter = $locale.NUMBER_FORMATS.DECIMAL_SEP,
 				thousandsDelimiter = $locale.NUMBER_FORMATS.GROUP_SEP,
 				decimals = $parse(attrs.fluigNumberMask)(scope);
@@ -31,8 +31,6 @@ function NumberMaskDirective($locale, $parse, PreFormatters, NumberMasks) {
 				var formatedValue = viewMask.apply(valueToFormat);
 				var actualNumber = parseFloat(modelMask.apply(valueToFormat));
 
-                console.log(valueToFormat, formatedValue, actualNumber)
-
 				if (angular.isDefined(attrs.fluigNegativeNumber)) {
 					var isNegative = (value[0] === '-'),
 						needsToInvertSign = (value.slice(-1) === '-');
@@ -44,8 +42,6 @@ function NumberMaskDirective($locale, $parse, PreFormatters, NumberMasks) {
 						formatedValue = '-' + ((actualNumber !== 0) ? formatedValue : '');
 					}
 				}
-
-                console.log(valueToFormat, formatedValue, actualNumber)
 
 				if (ctrl.$viewValue !== formatedValue) {
 					ctrl.$setViewValue(formatedValue);
@@ -78,7 +74,7 @@ function NumberMaskDirective($locale, $parse, PreFormatters, NumberMasks) {
 			ctrl.$parsers.push(parser);
 
 			if (attrs.fluigNumberMask) {
-				scope.$watch(attrs.fluigNumberMask, function(_decimals) {
+				scope.$watch(attrs.fluigNumberMask, function (_decimals) {
 					decimals = isNaN(_decimals) ? 2 : _decimals;
 					viewMask = NumberMasks.viewMask(decimals, decimalDelimiter, thousandsDelimiter);
 					modelMask = NumberMasks.modelMask(decimals);
@@ -90,11 +86,11 @@ function NumberMaskDirective($locale, $parse, PreFormatters, NumberMasks) {
 			if (attrs.min) {
 				var minVal;
 
-				ctrl.$validators.min = function(modelValue) {
+				ctrl.$validators.min = function (modelValue) {
 					return validators.minNumber(ctrl, modelValue, minVal);
 				};
 
-				scope.$watch(attrs.min, function(value) {
+				scope.$watch(attrs.min, function (value) {
 					minVal = value;
 					ctrl.$validate();
 				});
@@ -103,11 +99,11 @@ function NumberMaskDirective($locale, $parse, PreFormatters, NumberMasks) {
 			if (attrs.max) {
 				var maxVal;
 
-				ctrl.$validators.max = function(modelValue) {
+				ctrl.$validators.max = function (modelValue) {
 					return validators.maxNumber(ctrl, modelValue, maxVal);
 				};
 
-				scope.$watch(attrs.max, function(value) {
+				scope.$watch(attrs.max, function (value) {
 					maxVal = value;
 					ctrl.$validate();
 				});
