@@ -1011,17 +1011,8 @@ function HeaderDirective($locale) {
                 h = "h2";
             }
 
-<<<<<<< HEAD
             html += "<img src='" + logo + "' id='logo' class='logo' height='" + height + "' alt='Logo' title='Logo' border='0' />";
             html += '<' + h + ' class="title text-center">' + title + '</' + h + '>';
-=======
-            html += '<div class="col-xs-6">';
-            html += "<img src='" + logo + "' id='logo' class='logo' height='" + height + "' alt='Logo' title='Logo' border='0' />";
-            html += '</div>';
-            html += '<div class="col-xs-6">';
-            html += '<' + h + ' class="text-right">' + title + '</' + h + '>';
-            html += '</div>';
->>>>>>> 217e137a94c24903eb60922dfa14d26d885e80f9
             html += '</div>';
 
             element.prepend(html);
@@ -1110,13 +1101,6 @@ function SwitchDirective($compile, $timeout) {
     return {
         restrict: 'A',
         require: '?ngModel',
-<<<<<<< HEAD
-=======
-        scope: {
-            ngReadonly: "=",
-            ngDisabled: "="
-        },
->>>>>>> 217e137a94c24903eb60922dfa14d26d885e80f9
         link: function (scope, element, attrs, ctrl) {
 
             if (!ctrl) {
@@ -1133,7 +1117,6 @@ function SwitchDirective($compile, $timeout) {
 
             template.hide();
 
-<<<<<<< HEAD
             $timeout(function () {
 
                 FLUIGC.switcher.init(element, {
@@ -1142,29 +1125,6 @@ function SwitchDirective($compile, $timeout) {
                 
                 if (ctrl.$modelValue == true || ctrl.$modelValue == 'true') {
                     FLUIGC.switcher.setTrue(element);
-=======
-            scope.$watch('ngReadonly', function (val, oldval) {
-                FLUIGC.switcher.isReadOnly(element, val);
-            })
-            scope.$watch('ngDisabled', function (val, oldval) {
-                if (val) {
-                    FLUIGC.switcher.disable(element);
-                } else {
-                    FLUIGC.switcher.enable(element);
-                }
-            })
-
-            $timeout(function () {
-
-                FLUIGC.switcher.init(element, {
-                    "state": ctrl.$modelValue
-                });
-
-                if (ctrl.$modelValue == true || ctrl.$modelValue == 'true') {
-                    $timeout(function () {
-                        FLUIGC.switcher.setTrue(element);
-                    })
->>>>>>> 217e137a94c24903eb60922dfa14d26d885e80f9
                 }
 
                 FLUIGC.switcher.onChange(element, function (event, state) {
@@ -1173,10 +1133,6 @@ function SwitchDirective($compile, $timeout) {
 
                 });
                 $timeout(function () {
-<<<<<<< HEAD
-
-=======
->>>>>>> 217e137a94c24903eb60922dfa14d26d885e80f9
                     template.fadeIn();
                 }, 10);
             }, 10);
