@@ -12,6 +12,7 @@ function AutocompleteDirective($locale, $window, $timeout, $compile) {
             minLength: "@",
             filterFields: "=",
             resultFields: "=",
+            searchField: "@",
             displayKey: "@",
             searchTimeout: "@",
             values: "=",
@@ -32,7 +33,7 @@ function AutocompleteDirective($locale, $window, $timeout, $compile) {
             scope.fluigAutocompleteLimit = scope.fluigAutocompleteLimit || 100;
             scope.fluigAutocompleteType = scope.fluigAutocompleteType || 'autocomplete';
             scope.minLength = Number(attrs.minLength) || 0;
-            scope.searchTimeout = attrs.searchTimeout || 5000;
+            scope.searchTimeout = attrs.searchTimeout || 500;
 
             element.on('focus', function () {
 
@@ -42,15 +43,13 @@ function AutocompleteDirective($locale, $window, $timeout, $compile) {
             });
 
             scope.$watch('filterFields', function (val, oldval) {
-
                 if ((oldval || val) && val != oldval) {
-
-                    //createAutocomplete();
+                    // createAutocomplete();
                 }
             });
 
             scope.$watch('resultFields', function (val, oldval) {
-
+                
                 if ((oldval || val) && val != oldval) {
                     //createAutocomplete();
                 }
@@ -79,10 +78,9 @@ function AutocompleteDirective($locale, $window, $timeout, $compile) {
             function loadData(arr) {
 
                 return function (txt, fnc) {
-
                     var result, f, filter;
                     result = [],
-                        filter = new RegExp(txt, "i"),
+                        filter = new RegExp((txt.normalize ? txt.normalize("NFD") : txt).replace(/[\u0300-\u036f]/g, ""), "i"),
                         $.each(arr,
                             function (arr, obj) {
                                 var obj2;
@@ -96,8 +94,7 @@ function AutocompleteDirective($locale, $window, $timeout, $compile) {
                                     obj2 = obj;
                                 }
 
-                                (
-                                    (scope.displayKey && filter.test(obj2[scope.displayKey])) ||
+                                ((scope.displayKey && filter.test((String(obj2[scope.displayKey]).normalize ? String(obj2[scope.displayKey]).normalize("NFD") : String(obj2[scope.displayKey])).replace(/[\u0300-\u036f]/g, ""))) ||
                                     (!scope.displayKey && filter.test(JSON.stringify(obj2)))
                                 ) && result.length < scope.fluigAutocompleteLimit && result.push(obj2)
                             }), fnc(result);
@@ -124,9 +121,7 @@ function AutocompleteDirective($locale, $window, $timeout, $compile) {
                 }
 
                 if (scope.dataset) {
-                    var restUrl = "/api/public/ecm/dataset/search?datasetId=" + scope.dataset + "&searchField=" + scope.displayKey + "&filterFields=" + filterFields + "&resultFields=" + resultFields + "&";
-
-                    // var restUrl = "/api/public/ecm/dataset/search?datasetId=" + scope.dataset + "&";
+                    var restUrl = "/api/public/ecm/dataset/search?datasetId=" + scope.dataset + "&searchField=" + (scope.searchField || scope.displayKey) + "&filterFields=" + filterFields + "&resultFields=" + resultFields + "&limit=" + scope.fluigAutocompleteLimit + "&";
 
                     var source = {
                         url: restUrl,
@@ -177,7 +172,7 @@ function AutocompleteDirective($locale, $window, $timeout, $compile) {
 
                         })
                         .on('fluig.autocomplete.itemRemoved', function (result) {
-                            console.log("autocomplete 12")
+                            
                             if (scope.fluigAutocompleteType == 'autocomplete') {
                                 ctrl.$setViewValue();
                             } else {
@@ -212,11 +207,12 @@ function AutocompleteDirective($locale, $window, $timeout, $compile) {
             }
 
             ctrl.$formatters.push(formatter);
+            element.attr('placeholder', 'Digite para buscar...')
 
-            var template = $compile('<div class="input-group" ><span class="input-group-addon"><i class="fluigicon fluigicon-search"></i></span></div>')(scope);
+            // var template = $compile('<div class="input-group"><span class="input-group-addon"><i class="fluigicon fluigicon-search"></i></span></div>')(scope);
 
-            element.after(template);
-            template.append(element);
+            // element.after(template);
+            // template.append(element);
 
         }
     };

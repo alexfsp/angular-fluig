@@ -15,7 +15,7 @@ module.exports = {
 		},
 		validations: {
 			cep: function (value) {
-				return value.length === 8;
+				return value.toString().length === 8;
 			}
 		}
 	}),

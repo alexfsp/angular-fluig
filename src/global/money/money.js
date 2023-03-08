@@ -51,6 +51,7 @@ function MoneyMaskDirective($locale, $parse, $compile, PreFormatters) {
             }
 
             function parser(value) {
+                
                 if (ctrl.$isEmpty(value)) {
                     return value;
                 }

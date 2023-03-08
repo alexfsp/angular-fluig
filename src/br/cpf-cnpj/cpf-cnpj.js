@@ -10,17 +10,19 @@ var cpfPattern = new StringMask('000.000.000-00');
 module.exports = {
 	directive: maskFactory({
 		clearValue: function (rawValue) {
-			return rawValue.replace(/[^\d]/g, '').slice(0, 14);
+			return String(rawValue).replace(/[^\d]/g, '').slice(0, 14);
 		},
 		format: function (cleanValue) {
 			return format(cleanValue);
 		},
 		validations: {
 			cpf: function (value) {
-				return value.length > 11 || BrV.cpf.validate(value);
+				
+				return String(value).length > 11 || BrV.cpf.validate(String(value));
 			},
 			cnpj: function (value) {
-				return value.length <= 11 || BrV.cnpj.validate(value);
+				
+				return  String(value).length <= 11 || BrV.cnpj.validate(String(value));
 			}
 		}
 	}),

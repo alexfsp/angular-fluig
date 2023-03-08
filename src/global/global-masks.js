@@ -10,6 +10,7 @@ var m = angular.module('fluig.global.masks', [
     .directive('fluigTimeMask', require('./time/time'))
     .directive('fluigCreditCard', require('./credit-card/credit-card'))
     .directive('fluigError', require('./error/error'))
+    .directive('ngName', require('./name/name'))
 
     .filter('percentage', require('./percentage/percentage-filter'))
     .filter('time', require('./time/time-filter'))

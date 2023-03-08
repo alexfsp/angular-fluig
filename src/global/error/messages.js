@@ -1,5 +1,7 @@
 var messages = {
     "required": "O campo é obrigatório",
+    "minlength": "O tamanho do campo é inferior ao mínimo permitido",
+    "maxlength": "O tamanho do campo é superior ao máximo permitido",
     "min": "O valor informado é inferior ao mínimo",
     "max": "O valor informado é superior ao máximo",
     "cpf": "O CPF informado é inválido",

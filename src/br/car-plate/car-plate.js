@@ -3,7 +3,7 @@
 var StringMask = require('string-mask');
 var maskFactory = require('mask-factory');
 
-var carPlateMask = new StringMask('UUU-0000');
+var carPlateMask = new StringMask('UUU-0A00');
 
 module.exports = {
 	directive: maskFactory({

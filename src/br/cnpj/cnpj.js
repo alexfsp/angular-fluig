@@ -9,14 +9,14 @@ var cnpjPattern = new StringMask('00.000.000\/0000-00');
 module.exports = {
 	directive: maskFactory({
 		clearValue: function (rawValue) {
-			return rawValue.replace(/[^\d]/g, '').slice(0, 14);
+			return String(rawValue).replace(/[^\d]/g, '').slice(0, 14);
 		},
 		format: function (cleanValue) {
 			return format(cleanValue);
 		},
 		validations: {
 			cnpj: function (value) {
-				return BrV.cnpj.validate(value);
+				return BrV.cnpj.validate(String(value));
 			}
 		}
 	}),

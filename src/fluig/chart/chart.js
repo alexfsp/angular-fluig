@@ -64,10 +64,6 @@ function ChartDirective($locale, $window) {
 
             function createChart() {
 
-                console.log(scope.chartLabels);
-                console.log(scope.chartDatasets);
-                console.log(scope.chartType);
-
                 if (!scope.chartLabels || !scope.chartDatasets || !scope.chartType) return;
 
                 if (chart) {

@@ -35,7 +35,6 @@ function SwitchDirective($compile, $timeout) {
 
                 });
                 $timeout(function () {
-
                     template.fadeIn();
                 }, 10);
             }, 10);

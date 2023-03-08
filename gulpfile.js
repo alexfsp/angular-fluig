@@ -58,7 +58,7 @@ gulp.task('build-dependencies', function () {
         .pipe(source('angular-fluig-dependencies.js'))
         .pipe(buffer())
         .pipe(gulp.dest('./build/'))
-        .pipe(plugins.uglify())
+        // .pipe(plugins.uglify())
         .pipe(plugins.rename({
             extname: '.min.js'
         }))
@@ -107,7 +107,7 @@ gulp.task('build', ['copy', 'build-dependencies'], function () {
                 pkg: pkg
             }))
             .pipe(gulp.dest('./build/'))
-            .pipe(plugins.uglify())
+            // .pipe(plugins.uglify())
             .pipe(plugins.rename({
                 extname: '.min.js'
             }))

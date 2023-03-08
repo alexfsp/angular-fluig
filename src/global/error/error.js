@@ -2,7 +2,7 @@
 
 var messages = require('./messages');
 
-function ErrorDirective($compile) {
+function ErrorDirective($compile, $timeout) {
 
     return {
         restrict: 'A',
@@ -12,6 +12,7 @@ function ErrorDirective($compile) {
                 console.error('ngModel não informado para o elemento:', element[0]);
                 return;
             }
+
             var watchAttr = attrs.fluigError;
 
             scope.$watchCollection(watchAttr, function (values) {
@@ -26,6 +27,7 @@ function ErrorDirective($compile) {
                 });
 
                 element.popover('destroy');
+
                 var label = $("label[for='" + element.attr('name') + "']");
 
                 if (error != '') {
@@ -50,6 +52,6 @@ function ErrorDirective($compile) {
     }
 }
 
-ErrorDirective.$inject = ['$compile'];
+ErrorDirective.$inject = ['$compile', '$timeout'];
 
 module.exports = ErrorDirective;
